@@ -12,11 +12,16 @@ import com.batch.demo.projects.populatingBank.service.DTO.BatchDTO;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Min;
 
 // auxilary imports
 import java.lang.Math;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PopulatingService {
@@ -119,10 +124,69 @@ public class PopulatingService {
     avg_time: 5859.666666666667
     ---------------------------
 
+    Batch Size: 600
+    time: [5211, 4754, 5338]
+    avg_time: 5101
+    ---------------------------
+    
+    Batch Size: 700
+    time: [4978, 5372, 5420]
+    avg_time: 5257
+    ---------------------------
+    
+    Batch Size: 800
+    time: [4784, 5749, 4839]
+    avg_time: 5124
+    ---------------------------
+    
+    Batch Size: 900
+    time: [4894, 4756, 5282]
+    avg_time: 4977
+    ---------------------------
+
     Batch Size: 1000
     time: [5254, 5701, 6500]
     avg_time: 5818.333333333333
     ---------------------------
-     */
+
+
+    // [-372.87664256] *X  5824.0 ml output
+    */
+
+
+    public int optimumBatch(){
+        List<PopulatingEntity> entityList = populatingRepository.findAll();
+        int listSize = entityList.size();
+        listSize = (listSize/100)*100;
+
+        Map<Integer, Double> timeTable = new HashMap<Integer, Double>();
+        for(int i =100; i<listSize; i+=100){
+            double time = -372.87664256*i + 5824;
+            if(time<0){
+                time=0;
+            }
+            timeTable.put(i, time);
+        }
+        double minValue = Double.MAX_VALUE;
+        for(double value: timeTable.values()){
+            minValue = Math.min(value, minValue);
+        }
+
+        timeTable.forEach((key, value) -> {
+            System.out.println("Key: " + key + " value: " + value);
+        });
+
+        int key=0;
+        for (Map.Entry<Integer, Double> entry : timeTable.entrySet()) {
+          if (minValue == entry.getValue()) {
+            key = entry.getKey();
+            break;
+          }
+        }
+
+        return key;
+    }
+
+    
 
 }

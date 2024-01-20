@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 
@@ -72,4 +74,10 @@ public class PopulatingController {
         return ResponseEntity.status(HttpStatus.SC_OK)
                 .body(new apiResponse("Successful Operation!"));
     } 
+
+    @PostMapping
+    public int optimumBatch(){
+        return populatingService.optimumBatch();
+    }
+    
 }
